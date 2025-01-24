@@ -1,12 +1,13 @@
 {% extends "encyclopedia/layout.html" %} {% block title %}
-<h1>Resultados para: {{ query }}</h1>
-{% endblock %} {% block body %} {% if results %}
+<h1>Resultados da Busca</h1>
+{% endblock %} {% block body %}
+<h1>Resultados da Busca</h1>
+<p>Sua busca por "{{ query }}" retornou os seguintes resultados:</p>
 <ul>
-  {% for result in results %}
-  <li><a href="{% url 'entry' result%}"> {{result}}</a></li>
+  {% for entry in matching_entries %}
+  <li><a href="{% url 'entry' entry %}">{{ entry }}</a></li>
+  {% empty %}
+  <p>Nenhum resultado foi encontrado para "{{ query }}".</p>
   {% endfor %}
 </ul>
-{%else%}
-<h2>Nenhuma entrada encontrada para {{query}}</h2>
-{% endif %} 
 {% endblock %}
