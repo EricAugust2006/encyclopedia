@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import markdown2
 from . import util
 from difflib import get_close_matches
-
+from django.core.exceptions import ValidationError
+from django.http import HttpResponse
+import os
 
 def index(request):
     return render(request, "encyclopedia/index.html", {"entries": util.list_entries()})
@@ -44,4 +46,30 @@ def search(request):
     )
 
 def create_page(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        content = request.POST.get("content")
+
+        # Verificar se o título já existe
+        if util.get_entry(title):
+            return render(request, "encyclopedia/create_page.html", {
+                "message": "Já existe uma página com esse título."
+            })
+        
+        # Defina o caminho para o diretório 'entries'
+        entries_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'entries')
+        
+        # Certifique-se de que o diretório 'entries' exista
+        if not os.path.exists(entries_dir):
+            os.makedirs(entries_dir)
+        
+        # Caminho completo para o arquivo .md
+        file_path = os.path.join(entries_dir, f"{title}.md")
+
+        # Salvar o conteúdo no arquivo .md
+        with open(file_path, "w") as file:
+            file.write(content)
+
+        return redirect(f"/wiki/{title}")  # Redirecionar para a página recém-criada
+
     return render(request, "encyclopedia/create_page.html")

@@ -1,4 +1,6 @@
 import re
+import os
+
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
@@ -26,12 +28,11 @@ def save_entry(title, content):
 
 
 def get_entry(title):
-    """
-    Retrieves an encyclopedia entry by its title. If no such
-    entry exists, the function returns None.
-    """
-    try:
-        f = default_storage.open(f"entries/{title}.md")
-        return f.read().decode("utf-8")
-    except FileNotFoundError:
+    entries_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'entries')
+    file_path = os.path.join(entries_dir, f"{title}.md")
+
+    if os.path.exists(file_path):
+        with open(file_path, "r") as file:
+            return file.read()
+    else:
         return None
