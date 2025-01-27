@@ -1,1 +1,0 @@
-Uma linguagem de programação dificil

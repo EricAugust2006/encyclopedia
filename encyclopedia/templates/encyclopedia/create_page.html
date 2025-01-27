@@ -1,7 +1,7 @@
 {% extends "encyclopedia/layout.html" %}
 
 {% block body %}
-<form action="" method="post">
+<form action="{% url 'createpage' %}" method="post">
     {% csrf_token %}
     <input type="text" name="title" placeholder="Title">
     <input type="text" name="content" placeholder="Content">

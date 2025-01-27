@@ -1,4 +1,7 @@
 {% extends "encyclopedia/layout.html" %}
+{%if title %}
+<a href="{% url 'editpage' entry.title %}">Edit Page</a>
+{% endif %}
 
 {% block content %}
 <h1>{{ entry.title }}</h1>
